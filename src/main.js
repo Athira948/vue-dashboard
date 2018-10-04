@@ -6,6 +6,7 @@ import App from './App'
 import VueFormWizard from 'vue-form-wizard'
 import VeeValidate from 'vee-validate';
 import Vuelidate from 'vuelidate';
+import VueGoodTablePlugin from 'vue-good-table';
 
 // router setup
 import routes from './routes/routes'
@@ -18,9 +19,10 @@ import Notifications from './components/NotificationPlugin'
 // MaterialDashboard plugin
 import MaterialDashboard from './material-dashboard'
 
+import 'vue-good-table/dist/vue-good-table.css'
 
 import Chartist from 'chartist'
-
+ 
 
 
 // configure router
@@ -37,6 +39,7 @@ Vue.use(GlobalDirectives)
 Vue.use(Notifications)
 Vue.use(VeeValidate)
 Vue.use(Vuelidate)
+Vue.use(VueGoodTablePlugin);
 
 
 // global library setup

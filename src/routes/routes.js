@@ -15,7 +15,7 @@ import viewCampaign from '@/pages/viewCampaign.vue'
 import sponser from '@/pages/sponser.vue'
 import transfer from '@/pages/transfer.vue'
 import campaigners from '@/pages/Campaigners.vue'
-import pagination from '@/pages/pagination.vue'
+
 
 const routes = [{
     path: '/',
@@ -61,11 +61,7 @@ const routes = [{
         name: 'viewCampaign',
         component: viewCampaign
       },
-      {
-        path: '/pagination',
-        name: 'pagination',
-        component: pagination
-      },
+      
       {
         path: '/sponser',
         name: 'sponser',

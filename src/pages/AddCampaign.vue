@@ -1,138 +1,243 @@
 <template>
-  <form>
-    <md-card>
-    <md-card-header data-background-color="orange">
-        <h4 class="title">Add Compaign</h4>
-        <p class="category">Complete your form</p>
-      </md-card-header>
+<form novalidate  @submit.prevent="validateUser">
+    <div class="content">
+    <div class="md-layout">
+      <div class="md-layout-item">
+        <md-card>
+          <md-card-header data-background-color="green">
+            <h4 class="title"> Addcompaigner</h4>
+ <!--           <p class="category">Created using Roboto Font Family</p>    -->
+          </md-card-header>
+         <md-card-content>
+            <div id="typography">
+               <div class="title">
 
-      <md-card-content>
-        <div class="md-layout">
-          <!-- <div class="md-layout-item md-small-size-100 md-size-33">
-            <md-field>
-              <label>Company (disabled)</label>
-              <md-input v-model="disabled" disabled></md-input>
-            </md-field>
-          </div> -->
-          <div class="picker">
-            <md-field>
-              <label>Title</label>
-              <md-input v-model="Title" type="text"></md-input>
-            </md-field>
-          </div>
-          <div class="space">
-            <md-field>
+               
+              
+                              
+                
+                 
+                  <div class="md-layout-item md-small-size-100 md-size-100">
+                    <div class="picker">
+                  <md-field :class="getValidationClass('description')">
+                    <label for="description">Description</label>
+                    <md-input name="description" id="description"   :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.description.required">This field is required</span>
+                  </md-field>
+                    </div>
+                </div>
+                 <div class="md-layout-item md-small-size-100 md-size-100">
+                 <div class="picker">  
+               <md-field :class="getValidationClass('uploadimage')">
              
-              <md-file v-model="placeholder" placeholder="upload compaign image" />
+              <label for="uploadimage">uploadimage</label>
+                    <md-file name="uploadimage" type= "string" id="uploadimage"  v-model="form.uploadimage" :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.uploadimage.required">This field is required</span>
             </md-field>
           </div>
-          <div class="picker">
-            <md-field>
-              <label>Description</label>
-              <md-textarea v-model="textarea"></md-textarea>
-            </md-field>
-          </div>
-             <div class="space" >
-            <md-field>
-              <label>sponser amount</label>
-              <md-input v-model="sponseramount" type="text"></md-input>
-            </md-field>
-          </div>
-           <div class="picker">
-            <md-field>
-              <label>category</label>
-              <md-input v-model="category" type="text"></md-input>
-            </md-field>
-          </div>
-              <div class="space">
-            <md-field>
-              <label>city</label>
-              <md-input v-model="city" type="text"></md-input>
-            </md-field>
-          </div>
-         
+            </div>
+
+            <div class="md-layout-item md-small-size-100 md-size-40">
+                  <md-field :class="getValidationClass('title')">
+                    <label for="title">Title</label>
+                    <md-input name="title" id="title"  :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.title.required">This field is required</span>
+                  </md-field>
+                </div>
+                 <div class="md-layout-item md-small-size-100 md-size-40">
+                  <md-field :class="getValidationClass('Category')">
+                    <label for="Category">Category</label>
+                    
+                    <md-input name="Category" id="Category"   :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.Category.required">This field is required</span>
+                  </md-field>
+                </div>
+
+      
+
+      
+
+                <div class="md-layout-item md-small-size-100 md-size-100">   
+   <div class="picker"> 
+                  <md-field :class="getValidationClass('sponseramount')">
+                    <label for="sponseramount">sponseramount</label>
+                    <md-input name="sponseramount" type= "number" id="to"  v-model="form.sponseramount" :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.sponseramount.required">This field is required</span>
+                  </md-field>
+                 </div>
+                  </div>
+                  <div class="md-layout-item md-small-size-100 md-size-100">
+                    <div class="picker">
+                   <md-datepicker :class="getValidationClass('enddate')">
+                   
+
+                   <label for="enddate">end date</label>
+                    <span class="md-error" v-if="!$v.form.enddate.required">This field is required</span>
+                 </md-datepicker>
+                 </div>
+               </div>
+                
+              
+             <div class="md-layout-item md-small-size-100 md-size-40">
+                  <md-field :class="getValidationClass('city')">
+                    <label for="city">City</label>
+                    <md-input name="city" id="city"   :disabled="sending" />
+                    <span class="md-error" v-if="!$v.form.city.required">This field is required</span>
+                  </md-field>
+                </div>
+
 <div class="md-layout-item md-small-size-100 md-size-40">
-                 <md-datepicker v-model="selectedDate1">
-                   <label>Start date</label>
+                   <md-datepicker :class="getValidationClass('startdate')">
+                   
+
+                   <label for="startdate">start date</label>
+                    <span class="md-error" v-if="!$v.form.startdate.required">This field is required</span>
                  </md-datepicker>
                </div>
+                  
+            
+
+
+                
           
-         
-<div class="space">
-                 <md-datepicker v-model="selectedDate1">
-                   <label>end date</label>
-                 </md-datepicker>
-               </div>
-           <md-button class="md-dense md-raised md-primary">Add Compaigners</md-button>
 
-           
-           
-           
+               
+                <button class="button">Addcompaingers</button>
+                
+                
 
-          <!-- <div class="md-layout-item md-size-100">
-            <md-field maxlength="5">
-              <label>About Me</label>
-              <md-textarea v-model="aboutme"></md-textarea>
-            </md-field>
-          </div>
-          <div class="md-layout-item md-size-100 text-right">
-            <md-button class="md-raised md-success">Update Profile</md-button>
-          </div> -->
-        </div>
+                
 
-      </md-card-content>
-    </md-card>
+
+
+
+                
+
+                   
+              
+               
+               
+           </div>
+            </div>
+          </md-card-content>
+        </md-card>
+      </div>
+    </div>
+  </div>
   </form>
 </template>
+
 <script>
-export default {
-  name: 'edit-profile-form',
-  name: 'BasicDatepicker',
-  props: {
-    dataBackgroundColor: {
-      type: String,
-      default: ''
-    }
-  },
-  data () {
-    return {
-      username: null,
-      disabled: null,
-      emailadress: null,
-      lastname: null,
-      firstname: null,
-      address: null,
-      city: null,
-      country: null,
-      Description: null,
-      selectedDate: null,
-      
-    }
-  },
-   computed: {
-      startdate: {
-        get () {
-          return this.$material.locale.startdate
+  import { validationMixin } from 'vuelidate'
+  import {
+    required,
+    email,
+    minLength,
+    maxLength
+  } from 'vuelidate/lib/validators'
+
+  export default {
+    name: 'FormValidation',
+    mixins: [validationMixin],
+    data: () => ({
+      form: {
+        title: null,
+        description: null,
+        Category: null,
+        sponseramount: null,
+        city: null,
+        startdate: null,
+          enddate: null,
+          uploadimage: null
+      },
+      userSaved: false,
+      sending: false,
+      lastUser: null
+    }),
+    validations: {
+      form: {
+        title: {
+          required
         },
-        set (val) {
-          this.$material.locale.startdate = val
+        description: {
+          required
+         
+        },
+        Category: {
+          required
+         
+        },
+        city: {
+          required
+        },
+       
+        startdate: {
+          required
+        }, 
+        enddate: {
+          required
+        },
+        sponseramount: {
+          required
+        },
+        uploadimage:{
+          required
+        }
+      }
+    },
+    methods: {
+      getValidationClass (fieldName) {
+        const field = this.$v.form[fieldName]
+
+        if (field) {
+          return {
+            'md-invalid': field.$invalid && field.$dirty
+          }
+        }
+      },
+      clearForm () {
+        this.$v.$reset()
+        this.form.title= null
+        this.form.description = null
+        this.form.amount = null
+        this.uploadimage = null
+      },
+      
+      validateUser () {
+        this.$v.$touch()
+
+        if (!this.$v.$invalid) {
+          this.saveUser()
         }
       }
     }
-}
-
+  }
 </script>
+
 <style>
+.button {
+  padding: 15px 25px;
+  font-size: 15px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+}
 .picker{
-    width:40%;
-    float:left;
-    padding-left:20px;
+    width:60%;
+   float:right;
+     padding-left:120px;
+      padding-right:80px;
+  
+    
 }
 .space{
-    width:50%;
-    
+   
+   
     padding-left:120px;
-    
 }
 
 </style>

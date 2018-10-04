@@ -28,10 +28,7 @@
         <md-icon>library_books</md-icon>
         <p> My Campaigners</p>
       </sidebar-link>
-       <sidebar-link to="/pagination">
-        <md-icon>library_books</md-icon>
-        <p> Pagination</p>
-      </sidebar-link>
+      
      </side-bar>
 
     <div class="main-panel">
