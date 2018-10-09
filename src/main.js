@@ -7,6 +7,8 @@ import VueFormWizard from 'vue-form-wizard'
 import VeeValidate from 'vee-validate';
 import Vuelidate from 'vuelidate';
 import VueGoodTablePlugin from 'vue-good-table';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 
 // router setup
 import routes from './routes/routes'
@@ -40,6 +42,7 @@ Vue.use(Notifications)
 Vue.use(VeeValidate)
 Vue.use(Vuelidate)
 Vue.use(VueGoodTablePlugin);
+Vue.use(VueAxios, axios)
 
 
 // global library setup

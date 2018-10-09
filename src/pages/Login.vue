@@ -18,10 +18,10 @@
                 </md-card>
               </div>
               <!-- <md-field class="md-form-group" slot="inputs">
-                        <md-icon>face</md-icon>
-                        <label>First Name...</label>
-                        <md-input v-model="firstname" class="input"></md-input>
-                      </md-field> -->
+                              <md-icon>face</md-icon>
+                              <label>First Name...</label>
+                              <md-input v-model="firstname" class="input"></md-input>
+                            </md-field> -->
               <md-field class="md-form-group" slot="inputs" :class="{error: errors.has('email')}">
                 <md-icon>email</md-icon>
                 <label>Email...</label>
@@ -37,12 +37,12 @@
               <md-button class=" forgot md-simple md-success ">
                 Forgot password?
               </md-button>
-              <md-button @click="signup" class=" pos1 md-simple md-success md-lg">
+              <md-button class=" pos1 md-simple md-success md-lg" @click="signup">
                 create new account?
               </md-button>
               <br>
               <br>
-
+  
               <md-button type="submit" class=" pos2 ">
                 <strong>LOGIN</strong>
               </md-button>
@@ -55,54 +55,97 @@
 </template>
 
 <script>
+  import loginService from './loginService.js';
   export default {
     bodyClass: 'login-page',
     data() {
       return {
-        user: [{
+        user: {
           email: '',
           password: '',
           submitted: false,
           msg: 'fdr'
-        }]
+        }
       }
     },
     methods: {
+      signup () {var app = this;
+        app.$router.push('/signup');
+      },
       onSubmit() {
         console.log("here")
         this.$validator.validateAll()
-        .then( res =>{
-          console.log("res",res,this.errors)
-          if(res) {
-            console.log('true res')
-            window.location.href = 'http://localhost:8080/#/dashboard'
-          }
-          else {
-            console.log('false res')
-          }
-        },
-        err => {
-          console.log("err",err)
-        })
-        // if (!this.errors.any()) {
-        //   window.location.href = 'http://localhost:8080/#/dashboard'
-        // }
-        // else {
-        //   console.log('stayyy')
-        // }
+          .then(res => {
+              console.log("res", res, this.errors)
+              if (res) {
+                console.log('true res')
+  
+                const authUser = {}
+                var app = this;
+  
+                loginService.login(this.user)
+                  .then(res => {
+                    if (res.data === 200) {
+                      console.log('dashboard')
+                      authUser.data = res.data;
+                      authUser.token = res.token;
+                      app.$store.state.isLoggedIn = true
+                      window.localStorage.setItem('User', JSON.stringify(authUser));
+  
+                      if (authUser.data.accountType === 'sponser') {
+                        app.$router.push('/dashboard');
+                      } else {
+                        app.$router.push('/signUp');
+                      }
+                    } else {
+                      app.$store.state.isLoggedIn = false;
+                      console.log('hello')
+                    }
+                  })
+                  .catch(function(err) {
+                    console.log(err.data)
+                  })
+  
+              } else {
+                console.log('false res')
+              }
+            },
+            err => {
+              console.log("err", err)
+            })
+       
       },
-      signup: function() {
-        window.location.href = 'http://localhost:8080/#/signup'
+  
+  
+  
+      loginAuth: function() {
+        var app = this;
+        const status = JSON.parse(window.localStorage.getItem('User'));
+        if (status === null || status === undefined) {
+          app.$router.push('/login');
+        } else if (status.data.accountType === 'sponser') {
+          app.$router.push('/dashboard');
+        } else {
+          app.$router.push('/signUp');
+        }
       },
+  
+      // signup: function() {
+      //   window.location.href = 'http://localhost:8080/#/signup'
+      // },
       submitForm() {
         this.submitted = true
       }
+  
     },
     props: {
       header: {
         type: String,
         default: require('@/assets/img/profile_city.jpg')
       }
+    },
+    created: function() {
+      this.loginAuth();
     },
     computed: {
       headerStyle() {
