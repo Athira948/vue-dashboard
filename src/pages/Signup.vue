@@ -4,32 +4,33 @@
       <div>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
         <form-wizard class="wizard" title="Signup" subtitle="" color="#616161" @on-complete="onComplete">
-          <tab-content title="Basic Details" :before-change="beforeTabSwitch">
+          <tab-content title="Basic Details"  :before-change="beforeTabSwitch">
             <div class="input" :class="{error: errors.has('email')}"><input class="al " v-validate="'required|email'" v-model="user.email" type="email" name="email" placeholder="Email" required></div>
 
             <span class="error" v-if="errors.has('email')">
               {{msg}}
-              &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
-              &emsp;&emsp;
+              &emsp; &emsp;&emsp; 
               {{errors.first('email')}} </span>
             <br> {{user.msg}}
-            <div class="input">
-              <select aria-placeholder="Account Type" v-model="user.accountType" class="al" v-validate="'required'" name="accounttypt">
+            <div class="input" :class="{error: errors.has('accountType')}">
+              <select aria-placeholder="Account Type" v-model="user.accountType" class="al" v-validate="'required'" name="accountType">
                 <option value="center"   disabled selected>Account Type</option>
                 <option value="sponsers">Sponsers</option>
                 <option value="campaigners">Campaigners</option>
               </select>
             </div>
+             <span class="error" v-if="errors.has('accountType')">
+               &emsp; &emsp; &emsp; 
+              
+              {{errors.first('accountType')}}</span>
             <div class="input" autocomplete="off"> <br> <input v-validate="'required|min:6|max:35|confirmed:confirm_password'" class="al" type="password" v-model="user.password" name="password" placeholder="Password"></div>
             <span class="error" v-if="errors.has('password')">
-              &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
-              &emsp;&emsp;
+              &emsp; &emsp;&emsp; 
               {{errors.first('password')}}</span>
             <div class="input" autocomplete="off"> <br>
               <input class="al" ref="confirm_password" v-validate="'required'" type="password" v-model="user.confirmPassword" name="confirm_password" placeholder="Re enter password"></div>
             <span class="error" v-if="errors.has('confirm_password')">
-              &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
-              &emsp;&emsp;
+              &emsp; &emsp;&emsp; 
               {{errors.first('confirm_pasedsword')}}</span>
           </tab-content>
           <tab-content style=" padding: 2% 1% 1%;" title="Copy the string" class="pos">
@@ -56,7 +57,7 @@
   import 'vue-form-wizard/dist/vue-form-wizard.min.css'
   import signupService from './signupService.js';
   export default {
-    bodyClass: 'login-page',
+    bodyClass: 'signup-page',
     data() {
       return {
         count: 0,
@@ -80,22 +81,29 @@
     methods: {
       onComplete: function() {
         var app=this;
+        const status = JSON.parse(window.localStorage.getItem('aUser'));
+        if(status) {
         if (this.user.accountType === 'sponsers') {
            app.$router.push('/dashboard'); 
         } else if(this.user.accountType === 'campaigners') {
            app.$router.push('/transactions');
-        }
+           
+        } }
+
         else {
           console.log('Cannot create account')
+         // app.$refs.wizard.changeTab(1, 0)
+          this.random='User already exists with this email id.Select another one'
+           //app.$router.push('/signup');
         }
       },
+    
       beforeTabSwitch: function() {
         let self = this;
         return new Promise((resolve, reject) => {
           console.log('inside signup')
-          setTimeout(() => {
+         
             if (self.count < 1) {
-
               console.log('first')
               self.$validator.validateAll()
                 .then(res => {
@@ -112,15 +120,13 @@
                           authUser.data = res.data;
                           authUser.token = res.token;
                           self.random = authUser.data.seed;
-                          app.$store.state.isLoggedIn = true
                           window.localStorage.setItem('aUser', JSON.stringify(authUser));
                         } else {
-                          //app.$store.state.isLoggedIn = false;
+                         
                           console.log('not logged in')
                           self.msg='User already exists'
-                          vm.$refs.reset()
-                          
-                          
+                          alert('user exists already with the same email.')
+                          self.$refs.wizard.changeTab(0)
                         }
                       })
                       .catch(function(err) {
@@ -138,7 +144,7 @@
               // this.$refs.wizard.changeTab(0, 1)
               
             }
-          }, 1000)
+          
         })
       },
       isLastStep() {
@@ -165,7 +171,7 @@
         }
       }
     },
-    mounted: function() {
+    created: function() {
       this.signupAuth();
     },
     computed: {
