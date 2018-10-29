@@ -2,7 +2,7 @@
   <md-card>
     
     <md-card-header class="card-chart" :data-background-color="dataBackgroundColor">
-    <div class="hello">
+    <div >
      
  <img :src="chartImage"  >
       
@@ -75,7 +75,7 @@ export default {
      */
     initChart () {
       var chartIdQuery = `#${this.chartId}`
-      this.$Chartist[this.chartType](chartIdQuery, this.chartData, this.chartOptions)
+      // this.$Chartist[this.chartType](chartIdQuery, this.chartData, this.chartOptions)
     },
     /***
      * Assigns a random id to the chart
@@ -95,11 +95,3 @@ export default {
   }
 }
 </script>
-<style>
-
-.hello{
-  
-  height:120px;
- 
-}
-</style>

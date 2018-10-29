@@ -21,7 +21,6 @@
             </div>
              <span class="error" v-if="errors.has('accountType')">
                &emsp; &emsp; &emsp; 
-              
               {{errors.first('accountType')}}</span>
             <div class="input" autocomplete="off"> <br> <input v-validate="'required|min:6|max:35|confirmed:confirm_password'" class="al" type="password" v-model="user.password" name="password" placeholder="Password"></div>
             <span class="error" v-if="errors.has('password')">
@@ -52,7 +51,6 @@
     </div>
 </div>
 </template>
-
 <script>
   import 'vue-form-wizard/dist/vue-form-wizard.min.css'
   import signupService from './signupService.js';
@@ -81,15 +79,13 @@
     methods: {
       onComplete: function() {
         var app=this;
-        const status = JSON.parse(window.localStorage.getItem('aUser'));
+        const status = JSON.parse(window.localStorage.getItem('User'));
         if(status) {
         if (this.user.accountType === 'sponsers') {
            app.$router.push('/dashboard'); 
         } else if(this.user.accountType === 'campaigners') {
            app.$router.push('/transactions');
-           
         } }
-
         else {
           console.log('Cannot create account')
          // app.$refs.wizard.changeTab(1, 0)
@@ -97,12 +93,10 @@
            //app.$router.push('/signup');
         }
       },
-    
       beforeTabSwitch: function() {
         let self = this;
         return new Promise((resolve, reject) => {
           console.log('inside signup')
-         
             if (self.count < 1) {
               console.log('first')
               self.$validator.validateAll()
@@ -116,11 +110,14 @@
                     signupService.signup(self.user)
                       .then(function(res) {
                         if (res.status === 200) {
+                          console.log(res)
                           console.log(' logged in')
                           authUser.data = res.data;
+                          authUser.seed=res.seed;
+                          console.log(res)
                           authUser.token = res.token;
-                          self.random = authUser.data.seed;
-                          window.localStorage.setItem('aUser', JSON.stringify(authUser));
+                          self.random = authUser.seed;
+                          window.localStorage.setItem('User', JSON.stringify(authUser));
                         } else {
                          
                           console.log('not logged in')

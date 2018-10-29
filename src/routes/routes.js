@@ -1,25 +1,34 @@
 import DashboardLayout from '@/pages/Layout/DashboardLayout.vue'
 
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+
 import Dashboard from '@/pages/Dashboard.vue'
 import UserProfile from '@/pages/UserProfile.vue'
 import TableList from '@/pages/TableList.vue'
-import AddCampaign from '@/pages/AddCampaign.vue'
+import AddCampaign from '@/pages/campaign/AddCampaign.vue'
 import Icons from '@/pages/Icons.vue'
 import Maps from '@/pages/Maps.vue'
 import Transactions from '@/pages/Transactions.vue'
-import RecepientList from '@/pages/RecepientList.vue'
+import RecepientList from '@/pages/sponser/RecepientList.vue'
 import UpgradeToPRO from '@/pages/UpgradeToPRO.vue'
 import Signup from '@/pages/Signup.vue'
 import Login from '@/pages/Login.vue'
 import viewCampaign from '@/pages/viewCampaign.vue'
 import sponser from '@/pages/sponser.vue'
 import transfer from '@/pages/transfer.vue'
-import campaigners from '@/pages/Campaigners.vue'
+import campaigners from '@/pages/campaign/Campaigners.vue'
+import sponseredCampaign from '@/pages/sponser/sponseredCampaign'
+import EditCampaign from '@/pages/campaign/editcampaign.vue'
+import { lchmod } from 'fs';
 
+
+Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
     component: DashboardLayout,
+    name:'camp',
     redirect: '/login',
     children: [{
         path: 'dashboard',
@@ -57,13 +66,13 @@ const routes = [{
         component: Transactions
       },
       {
-        path: '/viewcampaign',
+        path: '/viewcampaign/:id',
         name: 'viewCampaign',
         component: viewCampaign
       },
       
       {
-        path: '/sponser',
+        path: '/sponser/:id',
         name: 'sponser',
         component: sponser
       },
@@ -78,6 +87,16 @@ const routes = [{
         component: campaigners
       },
       {
+        path: '/sponseredCampaign',
+        name: 'sponseredCampaign',
+        component: sponseredCampaign
+      },
+      {
+        path: '/editcampaign/:id',
+        name: 'editcampaign',
+        component: EditCampaign
+      },
+      {
         path: 'maps',
         name: 'Maps',
         meta: {
@@ -90,15 +109,16 @@ const routes = [{
       
     ]
   },
+  
   {
     path: '/signup',
     component: Signup
   },
   {
     path: '/login',
-    component: Login
+    component: Login,
+    name: 'login'
   },
   
 ]
-
-export default routes
+export default routes;

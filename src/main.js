@@ -9,6 +9,11 @@ import Vuelidate from 'vuelidate';
 import VueGoodTablePlugin from 'vue-good-table';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
+import {store} from  './components/store';
+import VueMoment from 'vue-moment'
+import Toasted from 'vue-toasted'
+import {EagleModal} from 'vue-eagle-modal'
+
 
 // router setup
 import routes from './routes/routes'
@@ -43,6 +48,10 @@ Vue.use(VeeValidate)
 Vue.use(Vuelidate)
 Vue.use(VueGoodTablePlugin);
 Vue.use(VueAxios, axios)
+Vue.use(VueMoment);
+Vue.use(Toasted)
+Vue.use(EagleModal);
+
 
 
 // global library setup
@@ -56,6 +65,7 @@ Object.defineProperty(Vue.prototype, '$Chartist', {
 new Vue({
   el: '#app',
   render: h => h(App),
+  store,
   router,
   data: {
     Chartist: Chartist

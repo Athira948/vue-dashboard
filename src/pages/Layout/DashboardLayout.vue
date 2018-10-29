@@ -12,23 +12,26 @@
         <md-icon>person</md-icon>
         <p>My Account</p>
       </sidebar-link>
-      <sidebar-link to="/table">
+      <!-- <sidebar-link to="/table">
         <md-icon>content_paste</md-icon>
         <p>User List</p>
-      </sidebar-link>
-      <sidebar-link to="/addcampaign">
+      </sidebar-link> -->
+      <sidebar-link to="/addcampaign" v-if="type==='campaigners'">
         <md-icon>add</md-icon>
         <p>Add Campaign</p>
       </sidebar-link>
-       <sidebar-link to="/recepientlist">
+       <sidebar-link to="/recepientlist" v-if="type==='sponsers'">
         <md-icon>library_books</md-icon>
         <p>Recepient List</p>
       </sidebar-link>
-       <sidebar-link to="/campaigners">
+       <sidebar-link to="/campaigners" v-if="type==='campaigners'">
         <md-icon>library_books</md-icon>
         <p> My Campaigners</p>
       </sidebar-link>
-      
+        <sidebar-link to="/sponseredCampaign" v-if="type==='sponsers'">
+        <md-icon>content_paste</md-icon>
+        <p> Sponsered Campaigners</p>
+      </sidebar-link>
      </side-bar>
 
     <div class="main-panel">
@@ -57,6 +60,15 @@ export default {
     DashboardContent,
     ContentFooter,
     MobileMenu
+  },
+  data(){
+    return {
+      type : null
+    }
+  },
+  created : function () {
+    var status=JSON.parse(window.localStorage.getItem('User'))
+    this.type=status.data.accountType
   }
 }
 </script>

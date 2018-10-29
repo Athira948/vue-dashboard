@@ -9,12 +9,13 @@ export default {
             .then(function (res) {
                 
                 resolve(res.data);
-                console.log('success')
+             
+                console.log('hello')
                
             })
             .catch(function (err) {
                 reject(err.response.data)
-                console.log('error')
+              
                
             
                 

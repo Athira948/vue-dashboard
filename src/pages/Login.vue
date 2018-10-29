@@ -18,31 +18,35 @@
                 </md-card>
               </div>
               <!-- <md-field class="md-form-group" slot="inputs">
-                              <md-icon>face</md-icon>
-                              <label>First Name...</label>
-                              <md-input v-model="firstname" class="input"></md-input>
-                            </md-field> -->
+                        <md-icon>face</md-icon>
+                        <label>First Name...</label>
+                        <md-input v-model="firstname" class="input"></md-input>
+                      </md-field> -->
               <md-field class="md-form-group" slot="inputs" :class="{error: errors.has('email')}">
                 <md-icon>email</md-icon>
                 <label>Email...</label>
+                
                 <md-input autocomplete="email" type="email" name="email" class="input" v-validate="'required|email'" v-model="user.email"></md-input>
               </md-field>
+            
               <div class="error" v-if="errors.has('email')">&emsp; {{errors.first('email')}}</div>
+ 
               <md-field class="md-form-group" slot="inputs" :class="{error: errors.has('password')}">
                 <md-icon>lock_outline</md-icon>
                 <label>Password...</label>
                 <md-input autocomplete="email" v-validate="'required'" name="password" v-model="user.password" type="password" class="input"></md-input>
               </md-field>
               <div class="error" v-if="errors.has('password')">{{errors.first('password')}}</div>
+              <span class ="mgge"> {{user.msg}}</span>
               <md-button class=" forgot md-simple md-success ">
                 Forgot password?
               </md-button>
-              <md-button class=" pos1 md-simple md-success md-lg" @click="signup">
-                create new account?
+              <md-button  class=" pos1 md-simple md-success md-lg" to='/signUp'>
+                create new account? 
               </md-button>
               <br>
               <br>
-  
+
               <md-button type="submit" class=" pos2 ">
                 <strong>LOGIN</strong>
               </md-button>
@@ -55,7 +59,7 @@
 </template>
 
 <script>
-  import loginService from './loginService.js';
+import loginService from './loginService.js';
   export default {
     bodyClass: 'login-page',
     data() {
@@ -64,79 +68,66 @@
           email: '',
           password: '',
           submitted: false,
-          msg: 'fdr'
+          msg: ''
+          
         }
       }
     },
-    methods: {
-      signup () {var app = this;
-        app.$router.push('/signup');
-      },
-      onSubmit() {
-        console.log("here")
+methods: {
+  onSubmit() {
+       console.log("here")
         this.$validator.validateAll()
-          .then(res => {
-              console.log("res", res, this.errors)
-              if (res) {
-                console.log('true res')
-  
-                const authUser = {}
-                var app = this;
-  
-                loginService.login(this.user)
-                  .then(res => {
-                    if (res.data === 200) {
-                      console.log('dashboard')
-                      authUser.data = res.data;
-                      authUser.token = res.token;
-                      app.$store.state.isLoggedIn = true
-                      window.localStorage.setItem('User', JSON.stringify(authUser));
-  
-                      if (authUser.data.accountType === 'sponser') {
-                        app.$router.push('/dashboard');
-                      } else {
-                        app.$router.push('/signUp');
-                      }
-                    } else {
-                      app.$store.state.isLoggedIn = false;
-                      console.log('hello')
+        .then( res =>{
+          console.log("res",res,this.errors)
+          if(res) {
+            console.log('true res')
+            const authUser = {}
+             var app = this;
+            loginService.login(this.user)
+            .then(res=> {
+                if(res.status === 200) {
+                 authUser.data = res.data;
+                    authUser.token = res.token;
+                    console.log('tfhfgs')
+                    window.localStorage.setItem('User',JSON.stringify(authUser));
+                    if(authUser.data.accountType === 'sponsers') {
+                    console.log('tfhfgsif')
+                    app.$router.push('/recepientlist');
+                    }else {
+                      console.log('elsetfhfgs')
+                      app.$router.push('/campaigners');
                     }
-                  })
-                  .catch(function(err) {
-                    console.log(err.data)
-                  })
-  
-              } else {
-                console.log('false res')
-              }
-            },
-            err => {
-              console.log("err", err)
+                }else{
+                     console.log(res.message)
+                     this.user.msg= res.message 
+                }
             })
-       
-      },
-  
-  
-  
-      loginAuth: function() {
-        var app = this;
-        const status = JSON.parse(window.localStorage.getItem('User'));
-        if (status === null || status === undefined) {
-          app.$router.push('/login');
-        } else if (status.data.accountType === 'sponser') {
-          app.$router.push('/dashboard');
-        } else {
-          app.$router.push('/signUp');
+        .catch(function (err){
+             console.log(err.data)
+            })
         }
-      },
-  
-      // signup: function() {
-      //   window.location.href = 'http://localhost:8080/#/signup'
-      // },
+          else {
+            console.log('false res')
+          }
+    },
+        err => {
+          console.log("err",err)
+        })
+  },
+     loginAuth:function () {
+             var app = this;
+            const status =  JSON.parse(window.localStorage.getItem('User'));
+            if(status === null || status === undefined) {
+                 app.$router.push('/login');
+             }else if (status.data.accountType === 'sponsers') {
+              app.$router.push('/recepientlist');
+            }else {
+               app.$router.push('/campaigners');
+            }
+        },
       submitForm() {
         this.submitted = true
       }
-  
     },
     props: {
       header: {
@@ -144,8 +135,9 @@
         default: require('@/assets/img/profile_city.jpg')
       }
     },
-    created: function() {
-      this.loginAuth();
+     created:function() {
+       console.log('hui')
+        this.loginAuth();
     },
     computed: {
       headerStyle() {
@@ -156,7 +148,6 @@
     }
   }
 </script>
-
 <style scoped>
   .top {
     padding-left: 25%;
@@ -165,12 +156,10 @@
     padding-top: 100px;
     padding-bottom: 150px;
   }
-  
   .align {
     display: flex;
     flex-wrap: wrap;
   }
-  
   .layout {
     min-width: 65.3333%;
     max-width: 66.3333%;
@@ -178,12 +167,10 @@
     background: white;
     border-radius: 2%;
   }
-  
   .description {
     padding-left: 33%;
     color: #999999;
   }
-  
   .md-button.md-fab,
   .md-button.md-just-icon {
     font-size: 24px;
@@ -195,46 +182,42 @@
     line-height: 41px;
     border-radius: 50%;
   }
-  
   .md-icon {
     padding-left: 2%;
   }
-  
   .md-field>.md-icon~label {
     left: 79px;
   }
-  
   .pos {
     padding-left: 41%;
   }
-  
   .section {
     height: auto;
   }
-  
   .input {
     padding-left: 2% !important;
   }
-  
   .pos2 {
     margin-left: 14%;
     background: linear-gradient(60deg, #66bb6a, #43a047) !important;
   }
-  
   .pos1 {
     float: left;
     line-height: 1;
     text-transform: capitalize;
   }
-  
   .forgot {
     float: right;
     text-transform: capitalize;
     font-size: inherit;
   }
-  
   .error {
     color: red;
     padding-left: 5%;
+  }
+  .mgge{
+    font-weight:600px;
+    color: red;
+    padding: 219px;
   }
 </style>

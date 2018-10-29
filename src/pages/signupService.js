@@ -9,12 +9,10 @@ export default {
             .then(function (res) {
                 console.log('from backend')
                 resolve(res.data);
-               
             })
             .catch(function (err) {
                 reject(err.response.data)
                 console.log('error')
-                console.log('ahhhh')
             })
         });
       
