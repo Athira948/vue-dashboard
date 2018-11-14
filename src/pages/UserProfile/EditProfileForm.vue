@@ -6,7 +6,6 @@
           <md-card>
             <md-card-header data-background-color="green">
               <h4 class="title"> Update Profile</h4>
-              <!--           <p class="category">Created using Roboto Font Family</p>    -->
             </md-card-header>
             <md-card-content>
               <div id="typography">
@@ -17,7 +16,7 @@
                       <md-input v-model="form.email" type="email" disabled></md-input>
                     </md-field>
                   </div>
-                  <div class="">
+                  <div>
                     <div class="right">
                       <md-field>
                         <label>Account Type</label>
@@ -25,7 +24,7 @@
                       </md-field>
                     </div>
                   </div>
-                  <div class="">
+                  <div>
                     <div class="left">
                        <md-field :class="getValidationClass('firstName')">
                       <label for="firstname">Firstname</label>
@@ -41,8 +40,8 @@
                         <span class="md-error" v-if="!$v.form.lastName.required">This field is required</span>
                       </md-field>
                   </div>
-                  <div class="">
-                    <div class="">
+                  <div >
+                    <div>
                       <md-field :class="getValidationClass('address')">
                         <label for="address">Address</label>
                         <md-input name="address" id="address" v-model="form.address" :disabled="sending" />
@@ -57,7 +56,7 @@
                       <span class="md-error" v-if="!$v.form.city.required">This field is required</span>
                     </md-field>
                   </div>
-                  <div class="">
+                  <div >
                     <div class="right">
                       <md-field :class="getValidationClass('pincode')">
                         <label for="postalcode">Postal Code</label>
@@ -87,19 +86,19 @@
                      <span class="md-error" v-if="!$v.form.filename1.required">This field is required</span>
                     </md-field>
                     </div>
-                    <div class="right"> 
+                    <div class="right">
                         <md-field :class="getValidationClass('filename2')">
                      <label for="filename2">Upload File 2</label>
                      <md-file name="filename2" type= "String" id="filename2" @change="onFileSelecteds" v-model="form.filename2" :disabled="sending" />
                      <span class="md-error" v-if="!$v.form.filename2.required">This field is required</span>
                     </md-field>
                   </div>
-                 <div class="md-layout-item md-size-100 text-right">
+                  <div class="md-layout-item md-size-100 text-right">
                     <button class="button">Submit</button>
                   </div>
                 </div>
               </div>
-            </md-card-content>
+          </md-card-content>
           </md-card>
         </div>
       </div>
@@ -112,10 +111,7 @@ import axios from 'axios'
     validationMixin
   } from 'vuelidate'
   import {
-    required,
-    email,
-    minLength,
-    maxLength
+    required
   } from 'vuelidate/lib/validators'
   export default {
     name: 'FormValidation',
@@ -131,12 +127,10 @@ import axios from 'axios'
         address: null,
         city: null,
         country: null,
-        email:'',
+        email: '',
         accountType: '',
         filename1: '',
-        filename2: '',
-       
-       
+        filename2: ''
       },
       userSaved: false,
       sending: false,
@@ -174,14 +168,12 @@ import axios from 'axios'
       }
     },
      created: function () {
-       const status = JSON.parse(window.localStorage.getItem('User'));
-       var token=status.token
-      // console.log(status.data)
-       axios.get('http://localhost:3200/api/user',{ headers: { 'x-access-token': token } } )
+       const status = JSON.parse(window.localStorage.getItem('User'))
+       var token = status.token
+       axios.get('http://localhost:3200/api/user', { headers: { 'x-access-token': token } } )
         .then(response => {
-           console.log(response.data)
           this.form.accountType = response.data.data.accountType,
-          this.form.email=response.data.data.email
+          this.form.email = response.data.data.email
         })
       },
     methods: {
@@ -194,18 +186,13 @@ import axios from 'axios'
         }
       },
       onFileSelected (event) {
-      this.file[0]=event.target.files[0]
-      console.log(event)
-      this.form.filename1=this.file[0].name
-      console.log(this.form.filename1)
+        this.file[0]=event.target.files[0]
+        this.form.filename1=this.file[0].name
       },
       onFileSelecteds (event) {
-        console.log(event)
         this.file[0]=event.target.files[0]
         this.form.filename2=this.file[0].name
-       console.log(this.form.filename2)
-        
-      },
+        },
       clearForm() {
         this.$v.$reset()
         this.form.firstName = null
@@ -220,29 +207,25 @@ import axios from 'axios'
       },
        validateUser() {
         this.$v.$touch()
-  
         if (!this.$v.$invalid) {
           this.saveUser(this.form)
         }
       },
       saveUser( value) {
-         const status = JSON.parse(window.localStorage.getItem('User'));
-         var token=status.token
-      // var details=this.form
+        const status = JSON.parse(window.localStorage.getItem('User'))
+        var token=status.token
         var data = new FormData(value);
-        //  var data = new FormData();
-        //  data.append('file',value)
-         axios.post('http://localhost:3200/api/edituser',value,{headers:{'x-access-token':token}})
-        .then(res=> {
-               console.log('saving...')
-               
-               this.$toasted.show('User Details saved',{ 
-                 icon : 'check',
-                 fullWidth:false,
-	             theme: "bubble", 
-	             position: "bottom-right", 
-	             duration : 5000})
-               console.log(res)
+        axios.post('http://localhost:3200/api/edituser', value, { headers: { 'x-access-token': token } })
+          .then(res => {
+            console.log('saving...')
+            var name = this.form.firstName + ' ' + this.form.lastName
+            window.localStorage.setItem('Uname',JSON.stringify(name))
+            this.$toasted.show('User Details saved', {
+              icon: 'check',
+              fullWidth: false,
+              theme: 'bubble',
+              position: 'bottom-right',
+              duration : 5000 })
         }).catch (function(e){
           console.log('error when uploading')
           this.$toasted.show('Error')
@@ -262,7 +245,7 @@ import axios from 'axios'
   background-color: #4CAF50;
   border: none;
   border-radius: 15px;
-}
+ }
   .piker {
     width: 60%;
     float: right;

@@ -1,4 +1,3 @@
-
 <template>
     <div class="content">
         <div class="md-layout">
@@ -38,7 +37,6 @@
 </div>
  </div>
 </template>
-
 <script>
     import {
         StatsCard,
@@ -74,9 +72,7 @@
         },
         created: function() {
             const status = JSON.parse(window.localStorage.getItem('User'));
-            console.log(status)
             var token = status.token
-            console.log(status.data)
             axios.get('http://localhost:3200/api/allcampaigns', {
                     headers: {
                         'x-access-token': token,
@@ -84,7 +80,6 @@
                     }
                 })
                 .then(response => {
-                    console.log(response.data.data)
                     this.campaigns = response.data.data;
                     console.log('saving...')
                 }).catch(function(e) {

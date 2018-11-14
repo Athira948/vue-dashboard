@@ -1,13 +1,11 @@
 <template>
   <form novalidate @submit.prevent="validateUser">
-    >
     <div class="content">
       <div class="md-layout">
         <div class="md-layout-item">
           <md-card>
             <md-card-header data-background-color="green">
               <h4 class="title"> Transfer</h4>
-              <!--           <p class="category">Created using Roboto Font Family</p>    -->
             </md-card-header>
             <md-card-content>
               <div id="typography">
@@ -43,75 +41,68 @@
     </div>
   </form>
 </template>
-
 <script>
-  import {
-    validationMixin
-  } from 'vuelidate'
-  import {
-    required,
-    email,
-    minLength,
-    maxLength
-  } from 'vuelidate/lib/validators'
-  
-  export default {
-    name: 'FormValidation',
-    mixins: [validationMixin],
-    data: () => ({
-      form: {
-        from: null,
-        to: null,
-        gender: null,
-        age: null,
-        email: null,
+import {
+  validationMixin
+} from 'vuelidate'
+import {
+  required,
+  email,
+  minLength,
+  maxLength
+} from 'vuelidate/lib/validators'
+export default {
+  name: 'FormValidation',
+  mixins: [validationMixin],
+  data: () => ({
+    form: {
+      from: null,
+      to: null,
+      gender: null,
+      age: null,
+      email: null,
+    },
+    userSaved: false,
+    sending: false,
+    lastUser: null
+  }),
+  validations: {
+    form: {
+      from: {
+        required
       },
-      userSaved: false,
-      sending: false,
-      lastUser: null
-    }),
-    validations: {
-      form: {
-        from: {
-          required
-        },
-        to: {
-          required
-  
-        },
-        amount: {
-          required
+      to: {
+        required
+      },
+      amount: {
+        required
+      }
+    }
+  },
+  methods: {
+    getValidationClass(fieldName) {
+      const field = this.$v.form[fieldName]
+      if (field) {
+        return {
+          'md-invalid': field.$invalid && field.$dirty
         }
       }
     },
-    methods: {
-      getValidationClass(fieldName) {
-        const field = this.$v.form[fieldName]
-  
-        if (field) {
-          return {
-            'md-invalid': field.$invalid && field.$dirty
-          }
-        }
-      },
-      clearForm() {
-        this.$v.$reset()
-        this.form.from = null
-        this.form.to = null
-        this.form.amount = null
-      },
-  
-      validateUser() {
-        this.$v.$touch()
-  
-        if (!this.$v.$invalid) {
-          this.saveUser()
-        }
+    clearForm() {
+      this.$v.$reset()
+      this.form.from = null
+      this.form.to = null
+      this.form.amount = null
+    },
+    validateUser() {
+      this.$v.$touch()
+      if (!this.$v.$invalid) {
+        this.saveUser()
       }
     }
   }
+}
 </script>
-
 <style>
   .button {
     padding: 15px 25px;

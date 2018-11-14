@@ -4,34 +4,25 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App'
 import VueFormWizard from 'vue-form-wizard'
-import VeeValidate from 'vee-validate';
-import Vuelidate from 'vuelidate';
-import VueGoodTablePlugin from 'vue-good-table';
-import axios from 'axios';
-import VueAxios from 'vue-axios';
-import {store} from  './components/store';
+import VeeValidate from 'vee-validate'
+import Vuelidate from 'vuelidate'
+import VueGoodTablePlugin from 'vue-good-table'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+import { store } from './components/store'
 import VueMoment from 'vue-moment'
 import Toasted from 'vue-toasted'
-import {EagleModal} from 'vue-eagle-modal'
-
-
+import { EagleModal } from 'vue-eagle-modal'
 // router setup
 import routes from './routes/routes'
-
 // Plugins
 import GlobalComponents from './globalComponents'
 import GlobalDirectives from './globalDirectives'
 import Notifications from './components/NotificationPlugin'
-
 // MaterialDashboard plugin
 import MaterialDashboard from './material-dashboard'
-
 import 'vue-good-table/dist/vue-good-table.css'
-
 import Chartist from 'chartist'
- 
-
-
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes
@@ -39,20 +30,18 @@ const router = new VueRouter({
 })
 
 Vue.use(VueRouter)
-Vue.use(VueFormWizard);
+Vue.use(VueFormWizard)
 Vue.use(MaterialDashboard)
 Vue.use(GlobalComponents)
 Vue.use(GlobalDirectives)
 Vue.use(Notifications)
 Vue.use(VeeValidate)
 Vue.use(Vuelidate)
-Vue.use(VueGoodTablePlugin);
+Vue.use(VueGoodTablePlugin)
 Vue.use(VueAxios, axios)
-Vue.use(VueMoment);
+Vue.use(VueMoment)
 Vue.use(Toasted)
-Vue.use(EagleModal);
-
-
+Vue.use(EagleModal)
 
 // global library setup
 Object.defineProperty(Vue.prototype, '$Chartist', {

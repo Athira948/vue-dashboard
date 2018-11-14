@@ -13,25 +13,16 @@
                     <p class="category"></p>
                   </md-card-header>
                   <md-card-content>
-                    <!-- <ordered-table table-header-color="orange"></ordered-table> -->
                   </md-card-content>
                 </md-card>
               </div>
-              <!-- <md-field class="md-form-group" slot="inputs">
-                        <md-icon>face</md-icon>
-                        <label>First Name...</label>
-                        <md-input v-model="firstname" class="input"></md-input>
-                      </md-field> -->
               <md-field class="md-form-group" slot="inputs" :class="{error: errors.has('email')}">
                 <md-icon>email</md-icon>
                 <label>Email...</label>
-                
                 <md-input autocomplete="email" type="email" name="email" class="input" v-validate="'required|email'" v-model="user.email"></md-input>
               </md-field>
-            
               <div class="error" v-if="errors.has('email')">&emsp; {{errors.first('email')}}</div>
- 
-              <md-field class="md-form-group" slot="inputs" :class="{error: errors.has('password')}">
+               <md-field class="md-form-group" slot="inputs" :class="{error: errors.has('password')}">
                 <md-icon>lock_outline</md-icon>
                 <label>Password...</label>
                 <md-input autocomplete="email" v-validate="'required'" name="password" v-model="user.password" type="password" class="input"></md-input>
@@ -42,11 +33,10 @@
                 Forgot password?
               </md-button>
               <md-button  class=" pos1 md-simple md-success md-lg" to='/signUp'>
-                create new account? 
+                create new account?
               </md-button>
               <br>
               <br>
-
               <md-button type="submit" class=" pos2 ">
                 <strong>LOGIN</strong>
               </md-button>
@@ -57,96 +47,86 @@
     </div>
   </div>
 </template>
-
 <script>
-import loginService from './loginService.js';
-  export default {
-    bodyClass: 'login-page',
-    data() {
-      return {
-        user: {
-          email: '',
-          password: '',
-          submitted: false,
-          msg: ''
-          
-        }
+import loginService from './loginService.js'
+export default {
+  bodyClass: 'login-page',
+  data () {
+    return {
+      user: {
+        email: '',
+        password: '',
+        submitted: false,
+        msg: ''
       }
-    },
-methods: {
-  onSubmit() {
-       console.log("here")
-        this.$validator.validateAll()
-        .then( res =>{
-          console.log("res",res,this.errors)
-          if(res) {
-            console.log('true res')
+    }
+  },
+  methods: {
+    onSubmit () {
+      this.$validator.validateAll()
+        .then(res => {
+          console.log('res', res, this.errors)
+          if (res) {
             const authUser = {}
-             var app = this;
+            var app = this
             loginService.login(this.user)
-            .then(res=> {
-                if(res.status === 200) {
-                 authUser.data = res.data;
-                    authUser.token = res.token;
-                    console.log('tfhfgs')
-                    window.localStorage.setItem('User',JSON.stringify(authUser));
-                    if(authUser.data.accountType === 'sponsers') {
-                    console.log('tfhfgsif')
-                    app.$router.push('/recepientlist');
-                    }else {
-                      console.log('elsetfhfgs')
-                      app.$router.push('/campaigners');
-                    }
-                }else{
-                     console.log(res.message)
-                     this.user.msg= res.message 
+              .then(res => {
+                if (res.status === 200) {
+                  authUser.data = res.data
+                  authUser.token = res.token
+                  window.localStorage.setItem('User', JSON.stringify(authUser))
+                  if (authUser.data.accountType === 'sponsers') {
+                    app.$router.push('/recepientlist')
+                  } else {
+                    app.$router.push('/campaigners')
+                  }
+                } else {
+                  this.user.msg = res.message
                 }
-            })
-        .catch(function (err){
-             console.log(err.data)
-            })
-        }
-          else {
+              })
+              .catch(function (err) {
+                console.log(err.data)
+              })
+          } else {
             console.log('false res')
           }
-    },
-        err => {
-          console.log("err",err)
-        })
-  },
-     loginAuth:function () {
-             var app = this;
-            const status =  JSON.parse(window.localStorage.getItem('User'));
-            if(status === null || status === undefined) {
-                 app.$router.push('/login');
-             }else if (status.data.accountType === 'sponsers') {
-              app.$router.push('/recepientlist');
-            }else {
-               app.$router.push('/campaigners');
-            }
         },
-      submitForm() {
-        this.submitted = true
+        err => {
+          console.log('err', err)
+        })
+    },
+    loginAuth: function () {
+      var app = this
+      const status = JSON.parse(window.localStorage.getItem('User'))
+      if (status === null || status === undefined) {
+        app.$router.push('/login')
+      } else if (status.data.accountType === 'sponsers') {
+        app.$router.push('/recepientlist')
+      } else {
+        app.$router.push('/campaigners')
       }
     },
-    props: {
-      header: {
-        type: String,
-        default: require('@/assets/img/profile_city.jpg')
-      }
-    },
-     created:function() {
-       console.log('hui')
-        this.loginAuth();
-    },
-    computed: {
-      headerStyle() {
-        return {
-          backgroundImage: `url(${this.header})`
-        }
+    submitForm () {
+      this.submitted = true
+    }
+  },
+  props: {
+    header: {
+      type: String,
+      default: require('@/assets/img/profile_city.jpg')
+    }
+  },
+  created: function () {
+    this.loginAuth()
+  },
+  computed: {
+    headerStyle () {
+      return {
+        backgroundImage: `url(${this.header})`
       }
     }
   }
+}
 </script>
 <style scoped>
   .top {

@@ -1,19 +1,13 @@
 <template>
   <md-card>
-    
     <md-card-header class="card-chart" :data-background-color="dataBackgroundColor">
-    <div >
-     
- <img :src="chartImage"  >
-      
- </div>
-      
+      <div >
+        <img :src="chartImage" >
+      </div>
     </md-card-header>
-
     <md-card-content>
       <slot name="content"></slot>
     </md-card-content>
-
     <md-card-actions md-alignment="left">
       <slot name="footer"></slot>
     </md-card-actions>

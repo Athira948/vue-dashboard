@@ -74,7 +74,7 @@
                     <span class="md-error" v-if="!$v.form.startdate.required">This field is required</span>
                  </md-datepicker>
                  </div>
-              <button class="button">Update Campaigners</button>
+                 <button class="button">Update Campaigners</button>
               </div>
             </div>
           </md-card-content>
@@ -85,13 +85,10 @@
   </form>
 </template>
 <script>
-import axios from 'axios';
-  import { validationMixin } from 'vuelidate'
-  import {
-    required,
-    email,
-    minLength,
-    maxLength,
+import axios from 'axios'
+import { validationMixin } from 'vuelidate'
+import {
+    required
    } from 'vuelidate/lib/validators'
 export default {
     name: 'FormValidation',
@@ -110,7 +107,7 @@ export default {
       userSaved: false,
       sending: false,
       lastUser: null,
-      fname:null,
+      fname:null
     }),
     validations: {
       form: {
@@ -151,9 +148,7 @@ export default {
       },
       onSelected() {
        this. fname = event.target.files[0]
-       console.log(this.fname)
-       this.form.campaignImage=this.fname.name
-       console.log(this.form.campaignImage)
+       this.form.campaignImage = this.fname.name
        },
       clearForm () {
         this.$v.$reset()
@@ -171,51 +166,49 @@ export default {
         }
       },
     saveUser(value) {
-        let id=this.$route.params.id
-        const status = JSON.parse(window.localStorage.getItem('User'));
-        var token=status.token
-        var app= this
-        var formData = new FormData();
-        formData.append('title',value.title)
-        formData.append('description',value.description)
-        formData.append('category',value.category)
-        formData.append('startdate',value.startdate)
-        formData.append('enddate',value.enddate)
-        formData.append('value',value.value)
-        formData.append('place',value.place)
-        formData.append('camimg',this.fname)
-        console.log(formData)
-        const urll="http://localhost:3200/api/updateCampaign/"+id
-        axios.post(urll,formData,{headers:{'x-access-token':token,'Content-Type' : 'multipart/form-data'}})
+      let id = this.$route.params.id
+      const status = JSON.parse(window.localStorage.getItem('User'))
+      var token = status.token
+      var app = this
+      var formData = new FormData();
+      formData.append('title', value.title)
+      formData.append('description', value.description)
+      formData.append('category', value.category)
+      formData.append('startdate', value.startdate)
+      formData.append('enddate', value.enddate)
+      formData.append('value', value.value)
+      formData.append('place', value.place)
+      formData.append('camimg', this.fname)
+      const urll = 'http://localhost:3200/api/updateCampaign/' + id
+      axios.post(urll, formData, { headers: { 'x-access-token': token, 'Content-Type': 'multipart/form-data' } })
         .then(res=> {
-            console.log(res)
-              app.$router.push('/campaigners');
-              console.log('saving...')
+          app.$router.push('/campaigners')
+          console.log('saving...')
         }).catch (function(e){
           console.log('error when uploading')
         })
        }
-     },
-      created(){
-         let id=this.$route.params.id
-         const status = JSON.parse(window.localStorage.getItem('User'));
-         var token=status.token
-         const url="http://localhost:3200/api/campaign/"+id
-         axios.get(url,{headers:{'x-access-token': token}})
-         .then (res =>{
-              this.campaign=res.data.data;
-              this.form.title = res.data.data.title
-              this.form.category = res.data.data.category
-              this.form.startdate = res.data.data.startdate
-              this.form.enddate = res.data.data.enddate
-              this.form.value = res.data.data.value
-              this.form.description = res.data.data.description
-              this.form.campaignImage = res.data.data.campaignImage
-              this.form.place = res.data.data.place
-              console.log('saving...')
+    },
+    created(){
+        let id = this.$route.params.id
+        const status = JSON.parse(window.localStorage.getItem('User'))
+        var token = status.token
+        const url= 'http://localhost:3200/api/campaign/' + id
+        axios.get(url, { headers: { 'x-access-token': token } })
+          .then (res => {
+            this.campaign = res.data.data
+            this.form.title = res.data.data.title
+            this.form.category = res.data.data.category
+            this.form.startdate = res.data.data.startdate
+            this.form.enddate = res.data.data.enddate
+            this.form.value = res.data.data.value
+            this.form.description = res.data.data.description
+            this.form.campaignImage = res.data.data.campaignImage
+            this.form.place = res.data.data.place
+            console.log('saving...')
          })
-         },
-         }
+    },
+}
 </script>
 <style>
 .button {
